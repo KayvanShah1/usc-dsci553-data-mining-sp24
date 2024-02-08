@@ -1,0 +1,4 @@
+{
+    "python.terminal.activateEnvironment": true,
+    "python.defaultInterpreterPath": "~/miniconda3/envs/dsci553/python.exe"
+}
