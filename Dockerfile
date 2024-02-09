@@ -19,7 +19,7 @@ RUN wget https://archive.apache.org/dist/spark/spark-3.1.2/spark-3.1.2-bin-hadoo
 
 ENV SPARK_HOME=/spark
 
-ENV PATH=$PATH:$SPARK_HOME/bin:/usr/bin/scala
+ENV PATH=$PATH:$SPARK_HOME/bin:/usr/bin/scala:usr/bin/python3.6
 
 RUN pip3 install pyspark findspark
 
