@@ -3,7 +3,8 @@
     "python.defaultInterpreterPath": "~/miniconda3/envs/dsci553/python.exe",
     "black-formatter.args": [
         "--preview",
-        "--line-length=120"
+        "--line-length=100",
+        "--enable-unstable-feature"
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
