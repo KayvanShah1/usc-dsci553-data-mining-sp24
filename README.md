@@ -1,4 +1,4 @@
-# DSCI553 - Foundations & Applications of Data Mining - Spring 24 - USC
+# DSCI553 - Foundations & Applications of Data Mining - Spring 2024 - USC
 Welcome to the comprehensive repository for _DSCI 510 - Foundations of Data Management_ at USC during the __Spring 2024__ semester, taught by `Professor Wei-Min When`. This centralized hub contains all coursework materials, including assignments and project solutions, organized into folders representing distinct modules covered in the course.
 
 Within this repository, you'll find assignments and projects that delve fundamental concepts like data storage, file systems, relational vs. semi-structured data, SQL, and more. The course explores big data analytics, addressing NoSQL databases, cloud storage, distributed file systems, and MapReduce. Advanced topics like data cleaning, transformation, warehousing, and integration are also covered. It's important to use this repository responsibly, refraining from engaging in any activities associated with plagiarism.
