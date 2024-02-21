@@ -7,37 +7,36 @@ Within this repository, you'll find assignments and projects that delve fundamen
 > Before exploring the materials, take a moment to review the license and disclaimer for responsible utilization. The repository covers various topics, providing valuable insights and hands-on experience in Data Management.
 
 ## Course Details:
-- **Course Name:** DSCI 510 - Foundations of Data Management
-- **Instructor:** Prof. Wensheng Wu
-- **Semester:** Spring 2023
+- **Course Name:** DSCI 553 - Foundations & Applications of Data Mining
+- **Instructor:** Prof. Wei-Min Shen
+- **Semester:** Spring 2024
 - **About the Course:**
   - Function and design of modern storage systems, including cloud; data management
 techniques; data modeling; network attached storage, clusters and data centers;
 relational databases; the map-reduce paradigm.
 
-Feel free to explore the assignments, projects, and solutions provided as learning aids. Whether you're a beginner or an experienced practitioner, this repository aims to be your companion in mastering the intersection of foundational data management fundamentals within Data Science & Engineering. Happy learning!
+Feel free to explore the assignments, projects, and solutions provided as learning aids. Whether you're a beginner or an experienced practitioner, this repository aims to be your companion in mastering the intersection of foundational data management and data mining fundamentals within Data Science & Engineering. Happy learning!
 
 > [!CAUTION]
 > Please note that this repository serves as a reference guide and should be utilized as a tool for learning and comprehension. It's paramount to refrain from engaging in any activities associated with plagiarism. Embrace the wealth of knowledge herein to enhance your understanding and augment your skill set in the field of Data Engineering.
 
 ## Table of contents
-| Assignment | Topic Covered                 |
-|------------|-------------------------------|
-| [Homework 1](/homework-1) | Analyse `Air Quality Index (AQI)` data with `Firebase Realtime DB` |
-| [Homework 2](/homework-2) | Emulate `HDFS` command line using `Python` |
-| [Homework 3](/homework-3) | Understanding the usage of `SQL` and `XML parsing` on `HDFS snapshot` as XML document |
-| [Homework 4](/homework-4) | Indexing and Querying on `B+ Trees` |
-| [Homework 5](/homework-5) | Analysing `AQI Index` data of multiple countries using `Hadoop MapReduce & Spark` |
+| Assignment | Topic Covered                 | Grade | Bonus |
+|------------|-------------------------------|-------|-------|
+| [Assignment 1](/assignment-1) | Data Exploration of `Yelp Dataset` with `Spark RDD` | 7/7 | 0/0.7 |
+| [Assignment 2](/assignment-2) | Emulate `HDFS` command line using `Python` |
+| [Assignment 3](/assignment-3) | Understanding the usage of `SQL` and `XML parsing` on `HDFS snapshot` as XML document |
+| [Assignment 4](/assignment-4) | Indexing and Querying on `B+ Trees` |
+| [Assignment 5](/assignment-5) | Analysing `AQI Index` data of multiple countries using `Hadoop MapReduce & Spark` |
+| [Assignment 6](/assignment-6) | Analysing `AQI Index` data of multiple countries using `Hadoop MapReduce & Spark` |
 | --- | --- |
-| [Lab 1](/lab-1) | Playing around with `file system` using `bash` command line on `AWS EC2` |
-| [Lab 2](/lab-2) | Setup `HDFS` on `AWS EC2` and execute basic file system commands |
-| [Lab 3](/lab-3) | Ingest and Query `AQI` data on `MongoDB` using `Mongo Atlas` |
-| [Lab 4](/lab-4) | Analyse `Books` data on `AWS DynamoDB` |
+| [Quizzes](/quizzes) | Consists of PDF documents with snapshots of `2 midterms` and `final exam` quizzes along with solutions |
 | --- | --- |
-| [Exam Solutions](/exam-solutions) | Consists of PDF documents with snapshots of `2 midterms` and `final exam` quizzes along with solutions |
-| --- | --- |
-| [Project Documents](/project) | Consists of all documentation related to the development of final project |
-| [Project Repository](https://github.com/KayvanShah1/firebase-realtime-db-emulator) | Firebase Realtime Database Emulator using `FastAPI` and `MongoDB` |
+| [Project](/project) | Consists of all documentation related to the development of final project |
+
+## References
+1. [USC DSCI 553 Fall 2022 - CyL97/DSCI-553](https://github.com/CyL97/DSCI-553)
+2. [USC DSCI 553 Spring 2021 - pohann/DSCI553](https://github.com/pohann/DSCI553)
 
 ## Authors
 1. [Kayvan Shah](https://github.com/KayvanShah1) | `MS in Applied Data Science` | `University of Southern California`
