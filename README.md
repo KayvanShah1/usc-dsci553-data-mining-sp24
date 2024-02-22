@@ -23,14 +23,14 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 ## Table of contents
 | Assignment | Topic Covered                 | Grade | Bonus |
 |------------|-------------------------------|-------|-------|
-| [Assignment 1](/assignment-1) | Data Exploration of `Yelp Dataset` with `Spark RDD` | 7/7 | 0/0.7 |
+| [Assignment 1](/assignment-1) | Data Exploration of `Yelp Reviews Dataset` with `Spark RDD` | 7/7 | 0/0.7 |
 | [Assignment 2](/assignment-2) | Emulate `HDFS` command line using `Python` |
 | [Assignment 3](/assignment-3) | Understanding the usage of `SQL` and `XML parsing` on `HDFS snapshot` as XML document |
 | [Assignment 4](/assignment-4) | Indexing and Querying on `B+ Trees` |
-| [Assignment 5](/assignment-5) | Analysing `AQI Index` data of multiple countries using `Hadoop MapReduce & Spark` |
-| [Assignment 6](/assignment-6) | Analysing `AQI Index` data of multiple countries using `Hadoop MapReduce & Spark` |
+| [Assignment 5](/assignment-5) |  |
+| [Assignment 6](/assignment-6) |  |
 | --- | --- |
-| [Quizzes](/quizzes) | Consists of PDF documents with snapshots of `2 midterms` and `final exam` quizzes along with solutions |
+| [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
 | --- | --- |
 | [Project](/project) | Consists of all documentation related to the development of final project |
 
