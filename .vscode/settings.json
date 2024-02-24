@@ -4,7 +4,8 @@
     "black-formatter.args": [
         "--preview",
         "--line-length=100",
-        "--enable-unstable-feature"
+        "--enable-unstable-feature",
+        "string_processing"
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
@@ -22,5 +23,6 @@
     "files.watcherExclude": {
         "**/target": true
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "black-formatter.importStrategy": "useBundled"
 }
