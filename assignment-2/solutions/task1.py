@@ -1,9 +1,9 @@
 import sys
 import time
-from pyspark import SparkContext, SparkConf
-
 from collections import Counter
-from itertools import combinations, chain
+from itertools import chain, combinations
+
+from pyspark import SparkConf, SparkContext
 
 
 def generate_baskets(data, case):
