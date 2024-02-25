@@ -24,9 +24,9 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | Assignment | Topic Covered                 | Grade | Bonus |
 |------------|-------------------------------|-------|-------|
 | [Assignment 1](/assignment-1) | Data Exploration of `Yelp Reviews Dataset` with `Spark RDD` | 7/7 | 0/0.7 |
-| [Assignment 2](/assignment-2) | Implement `SON Algorithm` using `Spark` and exploration of `Ta Feng Dataset`. Understanding `Frequent Itemsets`. |
-| [Assignment 3](/assignment-3) | Understanding the usage of `SQL` and `XML parsing` on `HDFS snapshot` as XML document |
-| [Assignment 4](/assignment-4) | Indexing and Querying on `B+ Trees` |
+| [Assignment 2](/assignment-2) | Implement `SON Algorithm` to find `Frequent Itemsets` using `Spark` and exploration of `Ta Feng Dataset`. | 7/7 | 0/0.7 |
+| [Assignment 3](/assignment-3) |  |
+| [Assignment 4](/assignment-4) |  |
 | [Assignment 5](/assignment-5) |  |
 | [Assignment 6](/assignment-6) |  |
 | --- | --- |
