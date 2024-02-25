@@ -12,10 +12,10 @@ def generate_baskets(data, case):
     """
     if case == 1:
         # Group Business
-        baskets = data.map(lambda line: line.split(",")).map(lambda x: (x[0], [x[1]]))
+        baskets = data.map(lambda line: line.strip().split(",")).map(lambda x: (x[0], [x[1]]))
     elif case == 2:
         # Group User
-        baskets = data.map(lambda line: line.split(",")).map(lambda x: (x[1], [x[0]]))
+        baskets = data.map(lambda line: line.strip().split(",")).map(lambda x: (x[1], [x[0]]))
     return baskets.reduceByKey(lambda a, b: a + b)
 
 
@@ -23,7 +23,7 @@ def hash_function(item1, item2, num_buckets):
     """
     Polynomial hash function to distribute items into different buckets.
     """
-    hash_val = (int(item1) * 31) + int(item2)
+    hash_val = int(item1) ^ int(item2)
     return hash_val % num_buckets
 
 
@@ -34,17 +34,16 @@ def PCY(baskets, total_num_baskets, support, num_buckets):
     candidates = []
     baskets = list(baskets)
 
-    # Calculate the support ratio based on the number of baskets in the current partition
-    # and the total number of baskets
+    # Calculate the support ratio based on the number of baskets in the current partition and the total number of
+    # baskets
     support_ratio = len(baskets) / total_num_baskets
 
     # Calculate the partition support threshold by multiplying the support ratio with the desired support
     partition_support_threshold = support_ratio * support
 
     # First pass:
-    # Initialize counters to keep track of item counts, pair counts, and hash counts
+    # Initialize counters to keep track of item counts, and hashes
     item_counts = Counter()
-    pair_counts = Counter()
     hash_counts = Counter()
 
     # Initialize a bitmap list with zeros, representing whether each hash bucket meets the support threshold
@@ -55,7 +54,6 @@ def PCY(baskets, total_num_baskets, support, num_buckets):
         item_counts.update(basket)
 
         pairs = list(combinations(basket, 2))
-        pair_counts.update(pairs)
 
         # Hash pairs and count the number of occurence every hash
         hashes = [hash_function(item[0], item[1], num_buckets) for item in pairs]
@@ -74,7 +72,7 @@ def PCY(baskets, total_num_baskets, support, num_buckets):
             candidates.append((tuple([item]), 1))
 
     frequent_pairs = []
-    for item in pair_counts.keys():
+    for item in combinations(frequent_singles, 2):
         hash_val = hash_function(item[0], item[1], num_buckets)
         if bitmap[hash_val] == 1:
             frequent_pairs.append(item)
