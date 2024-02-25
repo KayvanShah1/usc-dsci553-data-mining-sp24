@@ -21,7 +21,7 @@ def generate_baskets(data, case):
 
 def hash_function(item1, item2, num_buckets):
     """
-    Polynomial hash function to distribute items into different buckets.
+    Simple hash function to distribute items into different buckets.
     """
     hash_val = int(item1) ^ int(item2)
     return hash_val % num_buckets
