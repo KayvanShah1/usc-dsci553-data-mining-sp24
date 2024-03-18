@@ -1,6 +1,5 @@
+# %%writefile task2_1.py
 import csv
-import math
-import statistics
 import sys
 import time
 
@@ -18,39 +17,35 @@ def prepare_dataset(data, split="train"):
     return data
 
 
-def preprocess_train_data(train_data):
+def save_data(data, output_file_name):
+    header = ["user_id", "business_id", "prediction"]
+    with open(output_file_name, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        writer.writerows(data)
+
+
+def get_bus_to_usr_map(train_data):
     # Group by business_id and collect the corresponding set of users
-    bus2user = train_data.map(lambda x: (x[1], x[0])).groupByKey().mapValues(set)
-    bus2user_dict = bus2user.collectAsMap()
+    bus2user = (
+        train_data.map(lambda x: (x[1], (x[0], float(x[2]))))
+        .groupByKey()
+        .mapValues(lambda vals: {"users": dict(vals), "avg_rating": sum(val[1] for val in vals) / len(vals)})
+    )
+    return bus2user.collectAsMap()
 
+
+def get_usr_to_bus_map(train_data):
     # Group by user_id and collect the corresponding set of businesses
-    user2bus = train_data.map(lambda x: (x[0], x[1])).groupByKey().mapValues(set)
-    user2bus_dict = user2bus.collectAsMap()
-
-    # Group by business_id and collect the corresponding set of users with ratings
-    bus2user_rating = train_data.map(lambda x: (x[1], (x[0], float(x[2])))).groupByKey().mapValues(dict)
-    bus2user_rating_dict = bus2user_rating.collectAsMap()
-
-    # Calculate average rating for each business
-    bus_avg = (
-        train_data.map(lambda row: (row[1], float(row[2])))
+    user2bus = (
+        train_data.map(lambda x: (x[0], (x[1], float(x[2]))))
         .groupByKey()
-        .mapValues(lambda ratings: sum(ratings) / len(ratings))
-        .collectAsMap()
+        .mapValues(lambda vals: {"business": dict(vals)})
     )
-
-    # Calculate average rating for each user
-    user_avg = (
-        train_data.map(lambda row: (row[0], float(row[2])))
-        .groupByKey()
-        .mapValues(lambda ratings: sum(ratings) / len(ratings))
-        .collectAsMap()
-    )
-
-    return bus2user_dict, user2bus_dict, bus2user_rating_dict, bus_avg, user_avg
+    return user2bus.collectAsMap()
 
 
-def compute_pearson_similarity(data, item2user_dict, item2user_rating_dict):
+def compute_pearson_similarity(data, item2user_dict):
     """
     Formala: r = Σᵢ((xᵢ − mean(x))(yᵢ − mean(y))) (√Σᵢ(xᵢ − mean(x))² √Σᵢ(yᵢ − mean(y))²)⁻¹
     """
@@ -58,47 +53,54 @@ def compute_pearson_similarity(data, item2user_dict, item2user_rating_dict):
     item1, item2 = data
 
     # Find common user to calculate co-rated averages
-    common_users = item2user_dict[item1].intersection(item2user_dict[item2])
+    users_item1 = set(item2user_dict[item1]["users"].keys())
+    users_item2 = set(item2user_dict[item2]["users"].keys())
+    common_users = users_item1.intersection(users_item2)
 
-    # Get ratings of common users for both business
-    r1 = [item2user_rating_dict[item1][usr] for usr in common_users]
-    r2 = [item2user_rating_dict[item2][usr] for usr in common_users]
+    if len(common_users) <= 1:
+        similarity = (5 - abs(item2user_dict[item1]["avg_rating"] - item2user_dict[item2]["avg_rating"])) / 5
+    else:
+        r1 = []
+        r2 = []
+        # Get ratings of common users for both business
+        for usr in common_users:
+            r1.append(item2user_dict[item1]["users"][usr])
+            r2.append(item2user_dict[item2]["users"][usr])
 
-    # Center the ratings by subtracting the co-rated average rating
-    r1 = [r - statistics.mean(r1) for r in r1]
-    r2 = [r - statistics.mean(r2) for r in r2]
+        # Center the ratings by subtracting the co-rated average rating
+        r1_bar = sum(r1) / len(r1)
+        r2_bar = sum(r2) / len(r2)
+        r1 = [r - r1_bar for r in r1]
+        r2 = [r - r2_bar for r in r2]
 
-    # Compute weight for the item pair
-    numer = sum([a * b for a, b in zip(r1, r2)])
-    denom = math.sqrt(sum([math.pow(a, 2) for a in r1])) * math.sqrt(sum([math.pow(b, 2) for b in r2]))
+        # Compute weight for the item pair
+        numer = sum([a * b for a, b in zip(r1, r2)])
+        denom = ((sum([a**2 for a in r1])) ** 0.5) * (sum([b**2 for b in r2]) ** 0.5)
 
-    similarity = 0 if denom == 0 else numer / denom
+        similarity = 0 if denom == 0 else numer / denom
 
     return similarity
 
 
-def predict_rating(data, bus2user_dict, user2bus_dict, bus2user_rating_dict, bus_avg, user_avg):
+def predict_rating(data, bus2user_dict, user2bus_dict, neighbours=15):
     """Perform Item-based Collaborative filtering on prepared data."""
     # Unpack the data
     user, business = data
 
     # Return avg rating if user or business is not present in the dataset
-    if user not in user2bus_dict.keys():
-        return 3.5
-    if business not in bus2user_dict:
-        return user_avg[user]
+    if user not in user2bus_dict or business not in bus2user_dict:
+        return 3.0
 
     # Pearson similarities for rating prediction
     pc = []
 
-    for item in user2bus_dict[user]:
+    for item in user2bus_dict[user]["business"].keys():
         # Compute pearson similarity for each business pair
-        similarity = compute_pearson_similarity((business, item), bus2user_dict, bus2user_rating_dict)
-
-        pc.append((similarity, bus2user_rating_dict[item][user]))
+        similarity = compute_pearson_similarity((business, item), bus2user_dict)
+        pc.append((similarity, bus2user_dict[item]["users"][user]))
 
     # Calculate the predicted rating
-    top_pc = sorted(pc, key=lambda x: -x[0])[:15]
+    top_pc = sorted(pc, key=lambda x: -x[0])[:neighbours]
     x, y = 0, 0
     for p, r in top_pc:
         x += p * r
@@ -120,30 +122,18 @@ def task2_1(train_file_name, test_file_name, output_file_name):
         # Read and process the train data
         train_data = spark.textFile(train_file_name)
         train_data = prepare_dataset(train_data, split="train")
-        (bus2user_dict, user2bus_dict, bus2user_rating_dict, bus_avg, user_avg) = preprocess_train_data(train_data)
+
+        # Preprocess train data to get mapping dictionaries
+        bus2user_dict = get_bus_to_usr_map(train_data)
+        user2bus_dict = get_usr_to_bus_map(train_data)
 
         # Read and prepare validation data
         val_data = spark.textFile(test_file_name)
-        val_data = prepare_dataset(val_data, split="valid")
+        val_data = prepare_dataset(val_data, split="valid").cache()
 
-        # Predict ratings for validation dataset
-        val_data = (
-            val_data.map(
-                lambda x: (
-                    x[0],
-                    x[1],
-                    predict_rating(x, bus2user_dict, user2bus_dict, bus2user_rating_dict, bus_avg, user_avg),
-                )
-            )
-            .map(lambda x: list(x))
-            .collect()
-        )
+        val_data = val_data.map(lambda x: [x[0], x[1], predict_rating(x, bus2user_dict, user2bus_dict)]).cache()
 
-        header = ["user_id", "business_id", "prediction"]
-        with open(output_file_name, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-            writer.writerows(val_data)
+        save_data(val_data.collect(), output_file_name)
 
         execution_time = time.time() - start_time
         print(f"Duration: {execution_time}\n")
