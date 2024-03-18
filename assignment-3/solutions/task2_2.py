@@ -68,7 +68,7 @@ def process_train_data(row, review_dict, usr_dict, bus_dict):
 
 def task2_2(folder_path, test_file_name, output_file_name):
     # Initialize Spark
-    conf = SparkConf().setAppName("Task 2.2: : Model-based recommendation system")
+    conf = SparkConf().setAppName("Task 2.2: Model-based recommendation system")
     spark = SparkContext(conf=conf).getOrCreate()
     spark.setLogLevel("ERROR")
 
