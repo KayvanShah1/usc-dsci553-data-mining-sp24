@@ -71,6 +71,7 @@ def save_communities(communities, output_file_path):
         .groupByKey()
         .map(lambda x: sorted(list(x[1])))
         .sortBy(lambda x: (len(x), x))
+        .map(lambda x: [f"'{i}'" for i in x])
         .collect()
     )
 
