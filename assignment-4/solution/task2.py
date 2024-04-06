@@ -95,11 +95,8 @@ def calculate_betweenness(adj_mat):
         return parent, level, num_shortest_paths, path
 
     def accumulate_edge_weights(path, parent, num_shortest_paths):
-        node_weights = {}
+        node_weights = {node: 1 for node in reversed(path)}
         edge_weights = defaultdict(float)
-
-        for node in reversed(path):
-            node_weights[node] = 1
 
         for node in reversed(path):
             for parent_node in parent[node]:
