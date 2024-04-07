@@ -1,4 +1,5 @@
 # %%writefile task2.py
+import copy
 import sys
 import time
 from collections import defaultdict
@@ -92,7 +93,7 @@ def calculate_betweenness(adj_mat):
                     parent[neighbor].add(current_node)
                     num_shortest_paths[neighbor] += num_shortest_paths[current_node]
 
-        return parent, level, num_shortest_paths, path
+        return parent, num_shortest_paths, path
 
     def accumulate_edge_weights(path, parent, num_shortest_paths):
         node_weights = {node: 1 for node in reversed(path)}
@@ -109,7 +110,7 @@ def calculate_betweenness(adj_mat):
 
     betweenness = defaultdict(float)
     for node in adj_mat:
-        parent, level, num_shortest_paths, path = bfs(adj_mat, node)
+        parent, num_shortest_paths, path = bfs(adj_mat, node)
         edge_weights = accumulate_edge_weights(path, parent, num_shortest_paths)
         for edge, weight in edge_weights.items():
             betweenness[edge] += weight
@@ -118,9 +119,79 @@ def calculate_betweenness(adj_mat):
     return betweenness
 
 
+def girvan_newman(graph, betweenness):
+    def dfs(graph, node, visited, component):
+        """
+        Depth-first search to find connected component.
+        """
+        visited.add(node)
+        component.append(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                dfs(graph, neighbor, visited, component)
+
+    def remove_edges(graph, edges):
+        """
+        Remove edges from the graph.
+        """
+        for u, v in edges:
+            graph[u].remove(v)
+            graph[v].remove(u)
+
+    def calculate_modularity(graph, communities, original_graph, n_edge):
+        """
+        Calculate modularity for given communities.
+        """
+        modularity = 0.0
+        for community in communities:
+            for p in community:
+                for q in community:
+                    A = 1 if q in graph[p] and p in graph[q] else 0
+                    k_i_k_j = len(original_graph[p]) * len(original_graph[q])
+                    modularity += A - k_i_k_j / (2.0 * n_edge)
+        modularity /= 2 * n_edge
+        return modularity
+
+    sub_graph = copy.deepcopy(graph)
+    n_edge = len(betweenness)
+    original_graph = copy.deepcopy(graph)
+    max_modularity = -float("inf")
+    result = []
+
+    while len(betweenness) > 0:
+        candidates = []
+        visited_nodes = set()
+
+        for node in graph:
+            if node not in visited_nodes:
+                component = []
+                dfs(sub_graph, node, visited_nodes, component)
+                candidates.append(component)
+
+        modularity = calculate_modularity(sub_graph, candidates, original_graph, n_edge)
+
+        if modularity > max_modularity:
+            max_modularity = modularity
+            result = copy.deepcopy(candidates)
+
+        highest_betweenness = betweenness[0][1]
+        pruned_edges = [edge[0] for edge in betweenness if edge[1] >= highest_betweenness]
+        remove_edges(sub_graph, pruned_edges)
+        betweenness = calculate_betweenness(sub_graph)
+
+    result = sorted(result, key=lambda x: (len(x), sorted(x[0])))
+    return result
+
+
 def save_betweeness_data(data: list, path: str):
     with open(path, "w") as f:
         lines = [f"{str(user)},{round(value, 5)}\n" for user, value in data]
+        f.writelines(lines)
+
+
+def save_communities_data(data: list, path: str):
+    with open(path, "w") as f:
+        lines = [str(user)[1:-1] + "\n" for user in data]
         f.writelines(lines)
 
 
@@ -143,6 +214,10 @@ def task2(
         # Calculate betweenness centrality
         betweenness = calculate_betweenness(adj_mat)
         save_betweeness_data(betweenness, betweenness_output_file_path)
+
+        # Detect communities using Girvan Newman Algorithm
+        communities = girvan_newman(adj_mat, betweenness)
+        save_communities_data(communities, community_output_file_path)
 
         execution_time = time.time() - start_time
         print(f"Duration: {execution_time}\n")
