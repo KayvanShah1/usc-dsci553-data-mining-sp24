@@ -26,7 +26,7 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | [HW 1](/assignment-1) | Data Exploration of `Yelp Reviews Dataset` with `Spark RDD` | 7/7 | 0/0.7 |
 | [HW 2](/assignment-2) | Implement `SON Algorithm` to find `Frequent Itemsets` using `Spark` and exploration of `Ta Feng Dataset` | 7/7 | 0/0.7 |
 | [HW 3](/assignment-3) | Build Hybrid Recommendation systems integrating `Item-based Collaborative Filtering` and `Model-based` approaches using `XGBRegressor` | 7/7 | 0/0.7 |
-| [HW 4](/assignment-4) | Building `Graphs` and `Community Detection` based on `Graphframes` and `Girvan-Newman algorithm` | | |
+| [HW 4](/assignment-4) | Building `Graphs` and `Community Detection` based on `Graphframes` and `Girvan-Newman algorithm` | 7/7 | 0/0.7 |
 | [HW 5](/assignment-5) | Data Streaming Analysis - `Bloom Filter`, `Flajolet-Martin`, and `Reservoir Sampling` |
 | [HW 6](/assignment-6) | Clustering using `Bradley-Fayyad-Reina (BFR) algorithm` on synthetic dataset |
 | --- | --- |
