@@ -242,7 +242,10 @@ def create_dataset(row, usr_dict, bus_dict, review_dict, tip_dict, img_dict):
         usr, bus = row
         rating = None
 
+    # From review_train.json
     r_avg_stars, useful, funny, cool = review_dict.get((usr, bus), (None, 0, 0, 0))
+
+    # From user.json
     (
         usr_review_count,
         usr_useful,
@@ -255,38 +258,44 @@ def create_dataset(row, usr_dict, bus_dict, review_dict, tip_dict, img_dict):
         usr_avg_comp,
         membership_years,
     ) = usr_dict.get(usr, (0, None, None, None, 0, 3.5, 0, 0, 0, None))
+
+    # From business.json
     bus_avg_stars, bus_review_count, bus_is_open, num_attrs, num_categories = bus_dict.get(
         bus, (3.5, 0, None, None, None)
     )
+
+    # From tip.json
     likes, upvotes = tip_dict.get((usr, bus), (0, 0))
+
+    # From photo.json
     num_cat, num_img = img_dict.get(bus, (0, 0))
 
     return (
-        (usr, bus),
-        [
-            useful,
-            funny,
-            cool,
-            usr_review_count,
-            usr_useful,
-            usr_funny,
-            usr_cool,
-            usr_fans,
-            usr_avg_stars,
-            num_elite,
-            num_friends,
-            usr_avg_comp,
-            membership_years,
-            bus_avg_stars,
-            bus_review_count,
-            bus_is_open,
-            num_attrs,
-            num_categories,
-            likes,
-            upvotes,
-            num_cat,
-            num_img,
-        ],
+        usr,
+        bus,
+        r_avg_stars,
+        useful,
+        funny,
+        cool,
+        usr_review_count,
+        usr_useful,
+        usr_funny,
+        usr_cool,
+        usr_fans,
+        usr_avg_stars,
+        num_elite,
+        num_friends,
+        usr_avg_comp,
+        membership_years,
+        bus_avg_stars,
+        bus_review_count,
+        bus_is_open,
+        num_attrs,
+        num_categories,
+        likes,
+        upvotes,
+        num_cat,
+        num_img,
         float(rating),
     )
 
@@ -299,7 +308,7 @@ def save_data(data: list, output_file_name: str):
         writer.writerows(data)
 
 
-def task(folder_path, test_file_name, output_file_name):
+def process_data(folder_path, test_file_name):
     start_time = time.time()
 
     # Initialize Spark
@@ -311,28 +320,35 @@ def task(folder_path, test_file_name, output_file_name):
         data_reader = DataReader(spark, folder_path)
 
         # Additional Data
+        # User related data
         usr_rdd = data_reader.read_json_spark("user.json")
         usr_rdd = UserData.process(usr_rdd)
         usr_rdd = usr_rdd.cache().collectAsMap()
 
+        # Business related data
         bus_rdd = data_reader.read_json_spark("business.json")
         bus_rdd = BusinessData.process(bus_rdd)
         bus_rdd = bus_rdd.cache().collectAsMap()
 
+        # User to Business Reviews
         review_rdd = data_reader.read_json_spark("review_train.json")
         review_rdd = ReviewData.process(review_rdd)
         review_rdd = review_rdd.cache().collectAsMap()
 
+        # User 2 Business Tip
         tip_rdd = data_reader.read_json_spark("tip.json")
         tip_rdd = TipData.process(tip_rdd)
         tip_rdd = tip_rdd.cache().collectAsMap()
 
+        # Business Photo Data
         img_rdd = data_reader.read_json_spark("photo.json")
         img_rdd = PhotoData.process(img_rdd)
         img_rdd = img_rdd.cache().collectAsMap()
 
+        # Business checkin data
         # cin_rdd = data_reader.read_json_spark("checkin.json")
 
+        # Read train dataset
         train_rdd, _ = data_reader.read_csv_spark("yelp_train.csv")
 
         # Read validation dataset
@@ -340,28 +356,46 @@ def task(folder_path, test_file_name, output_file_name):
         val_rdd, _ = data_reader.read_csv_spark(test_file_name)
 
         # Merge datasets
-        train_rdd = train_rdd.map(lambda row: create_dataset(row, usr_rdd, bus_rdd, review_rdd, tip_rdd, img_rdd))
+        train_processed = train_rdd.map(lambda row: create_dataset(row, usr_rdd, bus_rdd, review_rdd, tip_rdd, img_rdd))
         val_processed = val_rdd.map(lambda row: create_dataset(row, usr_rdd, bus_rdd, review_rdd, tip_rdd, img_rdd))
 
-        # Extract X_train and Y_train
-        X_train = train_rdd.map(lambda x: x[1]).cache()
-        X_train = np.array(X_train.collect(), dtype="float32")
-        Y_train = train_rdd.map(lambda x: x[2]).cache()
-        Y_train = np.array(Y_train.collect(), dtype="float32")
+        column_names = [
+            "user_id",
+            "business_id",
+            "review_avg_stars",
+            "useful",
+            "funny",
+            "cool",
+            "usr_review_count",
+            "usr_useful",
+            "usr_funny",
+            "usr_cool",
+            "usr_fans",
+            "usr_avg_stars",
+            "num_elite",
+            "num_friends",
+            "usr_avg_comp",
+            "membership_years",
+            "bus_avg_stars",
+            "bus_review_count",
+            "bus_is_open",
+            "num_attrs",
+            "num_categories",
+            "likes",
+            "upvotes",
+            "num_cat",
+            "num_img",
+            "rating",
+        ]
 
-        # Extract X_train and Y_train
-        X_val = val_processed.map(lambda x: x[1]).cache()
-        X_val = np.array(X_val.collect(), dtype="float32")
+        # Convert processed datasets to Pandas DataFrame and save as CSV file
+        train_df_processed = pd.DataFrame(train_processed.collect(), columns=column_names)
+        train_df_processed.to_csv("yelp_train_processed.csv", index=False)
 
-        xgb = XGBRegressor()
-        xgb.fit(X_train, Y_train)
-        Y_pred = xgb.predict(X_val)
+        val_df_processed = pd.DataFrame(val_processed.collect(), columns=column_names)
+        val_df_processed.to_csv("yelp_val_processed.csv", index=False)
 
-        pred_data = []
-        for i, row in enumerate(val_rdd.collect()):
-            pred_data.append([row[0], row[0], Y_pred[i]])
-
-        save_data(pred_data, output_file_name)
+        # save_data(pred_data, output_file_name)
 
     except Exception as e:
         print(f"Exception occured:\n{e}")
@@ -370,7 +404,7 @@ def task(folder_path, test_file_name, output_file_name):
         spark.stop()
 
     execution_time = time.time() - start_time
-    print(f"Duration: {execution_time}\n")
+    print(f"Data Processing Duration: {execution_time}\n")
 
 
 if __name__ == "__main__":

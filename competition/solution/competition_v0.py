@@ -223,7 +223,19 @@ class ModelBased:
         X_val = val_processed.map(lambda x: x[0]).cache()
         X_val = np.array(X_val.collect(), dtype="float32")
 
-        xgb = XGBRegressor()
+        params = {
+            'lambda': 9.92724463758443,
+            'alpha': 0.2765119705933928,
+            'colsample_bytree': 0.5,
+            'subsample': 0.8,
+            'learning_rate': 0.02,
+            'max_depth': 17,
+            'random_state': 2020,
+            'min_child_weight': 101,
+            'n_estimators': 300,
+        }
+
+        xgb = XGBRegressor(**params)
         xgb.fit(X_train, Y_train)
         Y_pred = xgb.predict(X_val)
 
