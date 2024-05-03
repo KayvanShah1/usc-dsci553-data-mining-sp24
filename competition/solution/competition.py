@@ -5,10 +5,15 @@ import sys
 import time
 from datetime import datetime
 
-import numpy as np
 import pandas as pd
 from pyspark import SparkConf, SparkContext
+from sklearn.preprocessing import MinMaxScaler
 from xgboost import XGBRegressor
+
+
+class Path:
+    yelp_train_processed: str = "yelp_train_processed.csv"
+    yelp_val_processed: str = "yelp_val_processed.csv"
 
 
 class DataReader:
@@ -235,6 +240,34 @@ class PhotoData:
         return rdd
 
 
+class ModelBasedConfig:
+    drop_cols: list = [
+        "user_id",
+        "business_id",
+        "rating",
+        "review_avg_stars",
+        "useful",
+        "funny",
+        "cool",
+        # "num_attrs",
+        # "num_categories"
+        # "likes", "upvotes",
+        # "num_cat", "num_img"
+    ]
+    params: dict = {
+        "lambda": 9.92724463758443,
+        "alpha": 0.2765119705933928,
+        "colsample_bytree": 0.5,
+        "subsample": 0.8,
+        "learning_rate": 0.02,
+        "max_depth": 17,
+        "random_state": 2020,
+        "min_child_weight": 101,
+        "n_estimators": 300,
+    }
+    pred_cols: list = ["user_id", "business_id", "prediction"]
+
+
 def create_dataset(row, usr_dict, bus_dict, review_dict, tip_dict, img_dict):
     if len(row) == 3:
         usr, bus, rating = row
@@ -308,7 +341,7 @@ def save_data(data: list, output_file_name: str):
         writer.writerows(data)
 
 
-def process_data(folder_path, test_file_name):
+def process_data(folder_path: str, test_file_name: str):
     start_time = time.time()
 
     # Initialize Spark
@@ -359,6 +392,7 @@ def process_data(folder_path, test_file_name):
         train_processed = train_rdd.map(lambda row: create_dataset(row, usr_rdd, bus_rdd, review_rdd, tip_rdd, img_rdd))
         val_processed = val_rdd.map(lambda row: create_dataset(row, usr_rdd, bus_rdd, review_rdd, tip_rdd, img_rdd))
 
+        # Convert processed datasets to Pandas DataFrame and save as CSV file
         column_names = [
             "user_id",
             "business_id",
@@ -388,14 +422,11 @@ def process_data(folder_path, test_file_name):
             "rating",
         ]
 
-        # Convert processed datasets to Pandas DataFrame and save as CSV file
         train_df_processed = pd.DataFrame(train_processed.collect(), columns=column_names)
-        train_df_processed.to_csv("yelp_train_processed.csv", index=False)
+        train_df_processed.to_csv(Path.yelp_train_processed, index=False)
 
         val_df_processed = pd.DataFrame(val_processed.collect(), columns=column_names)
-        val_df_processed.to_csv("yelp_val_processed.csv", index=False)
-
-        # save_data(pred_data, output_file_name)
+        val_df_processed.to_csv(Path.yelp_val_processed, index=False)
 
     except Exception as e:
         print(f"Exception occured:\n{e}")
@@ -405,6 +436,45 @@ def process_data(folder_path, test_file_name):
 
     execution_time = time.time() - start_time
     print(f"Data Processing Duration: {execution_time}\n")
+
+
+def train_model(train_data_path: str, test_data_path: str):
+    # Read processed data
+    train_df_processed = pd.read_csv(train_data_path)
+    val_df_processed = pd.read_csv(test_data_path)
+
+    # Initialize min-max scaler
+    scaler = MinMaxScaler()
+
+    # Apply min-max normalization to the training and test data
+    X_train_norm = scaler.fit_transform(train_df_processed.drop(columns=ModelBasedConfig.drop_cols))
+    y_train = train_df_processed["rating"]
+    X_test_norm = scaler.transform(val_df_processed.drop(columns=ModelBasedConfig.drop_cols))
+    # y_test = val_df_processed["rating"]
+
+    # Train XGBoost Regression Model
+    model = XGBRegressor(**ModelBasedConfig.params)
+    model.fit(X_train_norm, y_train)
+
+    # Predict Rating on Test Data
+    y_test_pred = model.predict(X_test_norm)
+    val_df_processed["prediction"] = y_test_pred
+
+    # Filter Columns for output file
+    pred_df = val_df_processed.loc[:, ModelBasedConfig.pred_cols]
+
+    return pred_df.values.tolist()
+
+
+def main(folder_path: str, test_file_name: str, output_file_name: str):
+    # Process YELP Reviews Dataset
+    process_data(folder_path, test_file_name)
+
+    # Train Model Based Recommendation System
+    pred_data = train_model(Path.yelp_train_processed, Path.yelp_val_processed)
+
+    # Save the predictions
+    save_data(pred_data, output_file_name)
 
 
 if __name__ == "__main__":
@@ -417,4 +487,4 @@ if __name__ == "__main__":
     test_file_name = sys.argv[2]
     output_file_name = sys.argv[3]
 
-    task(folder_path, test_file_name, output_file_name)
+    main(folder_path, test_file_name, output_file_name)
