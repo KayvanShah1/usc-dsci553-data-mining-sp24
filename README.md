@@ -35,9 +35,11 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | [Project](/competition) | Consists of all documentation related to the development of final project |
 
 ## References
-1. [USC DSCI 553 Fall 2022 - CyL97/DSCI-553](https://github.com/CyL97/DSCI-553)
-2. [USC DSCI 553 Fall 2021 - Shayne-Yang/DSCI_553](https://github.com/Shayne-Yang/DSCI_553)
-3. [USC DSCI 553 Spring 2021 - pohann/DSCI553](https://github.com/pohann/DSCI553)
+1. [USC DSCI 553 Fall 2023 - rutujabhandigani/DSCI553-Data-Mining](https://github.com/rutujabhandigani/DSCI553-Data-Mining)
+2. [USC DSCI 553 Fall 2022 - CyL97/DSCI-553](https://github.com/CyL97/DSCI-553)
+3. [USC DSCI 553 Fall 2021 - Shayne-Yang/DSCI_553](https://github.com/Shayne-Yang/DSCI_553)
+4. [USC DSCI 553 Spring 2021 - pohann/DSCI553](https://github.com/pohann/DSCI553)
+
 
 ## Authors
 1. [Kayvan Shah](https://github.com/KayvanShah1) | `MS in Applied Data Science` | `University of Southern California`
