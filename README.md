@@ -32,7 +32,7 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | --- | --- |
 | [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
 | --- | --- |
-| [Project](/competition) | Consists of all documentation related to the development of final project |
+| [Competition](/competition) | Consists of all documentation and code related to the development of final project | 8/8 |
 
 ## References
 1. [USC DSCI 553 Fall 2023 - rutujabhandigani/DSCI553-Data-Mining](https://github.com/rutujabhandigani/DSCI553-Data-Mining)
