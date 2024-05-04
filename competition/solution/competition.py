@@ -1,3 +1,62 @@
+#######################################################################################################################
+# Method Description
+#######################################################################################################################
+#
+# **Model-Based Recommendation System for Yelp Reviews Data**
+
+# This script implements a model-based recommendation system for Yelp reviews data. It aims to predict user ratings for
+# businesses based on various features extracted from the Yelp Reviews dataset.
+
+# ## Model
+# To enhance the effectiveness of our recommendation system, I opted for a model-based approach over the hybrid method
+# utilized in our previous work (HW3). This decision stems from the superior performance of model-based systems across
+# various components of the recommendation process. I employ the XGBoost Regressor in this implementation, utilizing
+# parameters optimized through local GridSearch.
+
+# ## Feature Engineering:
+# Our feature selection process draws from diverse aspects of the Yelp dataset, encompassing user-centric metrics
+# (e.g., review count, average stars, elite status), business-oriented attributes (e.g., review count, average stars,
+# attributes), and the dynamics of user-business interactions (e.g., reviews, tips). Additionally, I consider
+# metadata from business-associated photos as an indicator of authenticity and trustworthiness. Throughout feature
+# extraction, we employ aggregation techniques to consolidate sparse matrices and mitigate null entries.
+
+# After extensive experimentation with different feature sets, we made strategic decisions regarding feature inclusion.
+# While initially excluding review-related features due to their absence for (user, business) pairs in validation and
+# test sets, reintroducing them became imperative after observing adverse effects on RMSE upon removal. Similarly,
+# their reinstatement was necessary to maintain model performance despite the initial exclusion of tip and photo
+# features.
+#
+
+#######################################################################################################################
+# Error Distribution
+#######################################################################################################################
+#
+# >=0 and <1:    102162
+# >=1 and <2:     32993
+# >=2 and <3:      6116
+# >=3 and <4:       773
+# >=4:                0
+#
+
+#######################################################################################################################
+# RMSE
+#######################################################################################################################
+#
+# Validation Set:         0.9772555489644983, good
+# Test Set:
+#
+
+#######################################################################################################################
+# Execution Time
+#######################################################################################################################
+#
+# Data Processing Time:       183.61311721801758 s
+# Model Training Time:        425.02053117752075 s
+# -----------------------------------------------------------
+# Total Execution Time:       622.1228864192963 s
+#
+
+
 import csv
 import json
 import os
@@ -5,6 +64,7 @@ import sys
 import time
 from datetime import datetime
 
+import numpy as np
 import pandas as pd
 from pyspark import SparkConf, SparkContext
 from sklearn.preprocessing import MinMaxScaler
@@ -17,22 +77,16 @@ class Path:
 
 
 class DataReader:
-    def __init__(self, sc: SparkContext, folder_path: str):
+    def __init__(self, sc: SparkContext):
         self.sc = sc
-        self.folder_path = folder_path
-
-    def get_path(self, filename: str):
-        return os.path.join(self.folder_path, filename)
 
     def read_csv_spark(self, path: str):
-        path = self.get_path(path)
         rdd = self.sc.textFile(path)
         header = rdd.first()
         rdd = rdd.filter(lambda row: row != header).map(lambda row: row.split(","))
         return rdd, header.split()
 
     def read_json_spark(self, path: str):
-        path = self.get_path(path)
         return self.sc.textFile(path).map(lambda row: json.loads(row))
 
 
@@ -350,42 +404,42 @@ def process_data(folder_path: str, test_file_name: str):
     spark.setLogLevel("ERROR")
 
     try:
-        data_reader = DataReader(spark, folder_path)
+        data_reader = DataReader(spark)
 
         # Additional Data
         # User related data
-        usr_rdd = data_reader.read_json_spark("user.json")
+        usr_rdd = data_reader.read_json_spark(os.path.join(folder_path, "user.json"))
         usr_rdd = UserData.process(usr_rdd)
         usr_rdd = usr_rdd.cache().collectAsMap()
 
         # Business related data
-        bus_rdd = data_reader.read_json_spark("business.json")
+        bus_rdd = data_reader.read_json_spark(os.path.join(folder_path, "business.json"))
         bus_rdd = BusinessData.process(bus_rdd)
         bus_rdd = bus_rdd.cache().collectAsMap()
 
         # User to Business Reviews
-        review_rdd = data_reader.read_json_spark("review_train.json")
+        review_rdd = data_reader.read_json_spark(os.path.join(folder_path, "review_train.json"))
         review_rdd = ReviewData.process(review_rdd)
         review_rdd = review_rdd.cache().collectAsMap()
 
         # User 2 Business Tip
-        tip_rdd = data_reader.read_json_spark("tip.json")
+        tip_rdd = data_reader.read_json_spark(os.path.join(folder_path, "tip.json"))
         tip_rdd = TipData.process(tip_rdd)
         tip_rdd = tip_rdd.cache().collectAsMap()
 
         # Business Photo Data
-        img_rdd = data_reader.read_json_spark("photo.json")
+        img_rdd = data_reader.read_json_spark(os.path.join(folder_path, "photo.json"))
         img_rdd = PhotoData.process(img_rdd)
         img_rdd = img_rdd.cache().collectAsMap()
 
         # Business checkin data
-        # cin_rdd = data_reader.read_json_spark("checkin.json")
+        # cin_rdd = data_reader.read_json_spark(os.path.join(folder_path, "checkin.json"))
 
         # Read train dataset
-        train_rdd, _ = data_reader.read_csv_spark("yelp_train.csv")
+        train_rdd, _ = data_reader.read_csv_spark(os.path.join(folder_path, "yelp_train.csv"))
 
         # Read validation dataset
-        test_file_name = os.path.basename(test_file_name)
+        # test_file_name = os.path.basename(test_file_name)
         val_rdd, _ = data_reader.read_csv_spark(test_file_name)
 
         # Merge datasets
@@ -435,10 +489,11 @@ def process_data(folder_path: str, test_file_name: str):
         spark.stop()
 
     execution_time = time.time() - start_time
-    print(f"Data Processing Duration: {execution_time}\n")
+    print(f"Data Processing Duration: {execution_time} s\n")
 
 
 def train_model(train_data_path: str, test_data_path: str):
+    start_time = time.time()
     # Read processed data
     train_df_processed = pd.read_csv(train_data_path)
     val_df_processed = pd.read_csv(test_data_path)
@@ -463,10 +518,35 @@ def train_model(train_data_path: str, test_data_path: str):
     # Filter Columns for output file
     pred_df = val_df_processed.loc[:, ModelBasedConfig.pred_cols]
 
+    execution_time = time.time() - start_time
+    print(f"Model Training Time: {execution_time} s\n")
+
     return pred_df.values.tolist()
 
 
+def get_error_distribution(test_data_path: str, output_file_name: str):
+    # Read Validation Processed Dataframe
+    val_df_processed = pd.read_csv(test_data_path, usecols=["user_id", "business_id", "rating"])
+
+    # Read final output file
+    pred_df = pd.read_csv(output_file_name)
+    pred_df["error"] = abs(val_df_processed["rating"] - pred_df["prediction"])
+
+    bins = [-np.inf, 1, 2, 3, 4, np.inf]
+
+    # Define the labels for error levels
+    labels = [">=0 and <1:", ">=1 and <2:", ">=2 and <3:", ">=3 and <4:", ">=4:"]
+
+    # Bin the absolute differences into error levels
+    pred_df["Error Distribution:"] = pd.cut(pred_df["error"], bins=bins, labels=labels, right=False)
+
+    # Count the occurrences in each error level
+    error_distribution = pred_df["Error Distribution:"].value_counts().sort_index()
+    print(error_distribution)
+
+
 def main(folder_path: str, test_file_name: str, output_file_name: str):
+    start_time = time.time()
     # Process YELP Reviews Dataset
     process_data(folder_path, test_file_name)
 
@@ -475,6 +555,12 @@ def main(folder_path: str, test_file_name: str, output_file_name: str):
 
     # Save the predictions
     save_data(pred_data, output_file_name)
+
+    # Get the error distribution
+    get_error_distribution(Path.yelp_val_processed, output_file_name)
+
+    execution_time = time.time() - start_time
+    print(f"Total Execution Time: {execution_time} s\n")
 
 
 if __name__ == "__main__":
@@ -488,3 +574,5 @@ if __name__ == "__main__":
     output_file_name = sys.argv[3]
 
     main(folder_path, test_file_name, output_file_name)
+
+# main("CompetitionStudentData", "CompetitionStudentData/yelp_val.csv", "output/output-final.csv")
