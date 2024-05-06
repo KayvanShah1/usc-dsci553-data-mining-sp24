@@ -30,7 +30,7 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | [HW 5](/assignment-5) | Data Streaming Analysis - `Bloom Filter`, `Flajolet-Martin`, and `Reservoir Sampling` | 7/7 |
 | [HW 6](/assignment-6) | Clustering using `Bradley-Fayyad-Reina (BFR) algorithm` on synthetic dataset | 7/7 |
 | --- | --- |
-| [Competition](/competition) | Model- Based Recommendation System on Yelp Reviews Dataset | 8/8 |
+| [Competition](/competition) | Model-Based Recommendation System on Yelp Reviews Dataset | 8/8 |
 | --- | --- |
 | [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
 
