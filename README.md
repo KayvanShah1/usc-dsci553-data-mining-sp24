@@ -30,9 +30,9 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | [HW 5](/assignment-5) | Data Streaming Analysis - `Bloom Filter`, `Flajolet-Martin`, and `Reservoir Sampling` | 7/7 |
 | [HW 6](/assignment-6) | Clustering using `Bradley-Fayyad-Reina (BFR) algorithm` on synthetic dataset | 7/7 |
 | --- | --- |
-| [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
+| [Competition](/competition) | Model- Based Recommendation System on Yelp Reviews Dataset | 8/8 |
 | --- | --- |
-| [Competition](/competition) | Consists of all documentation and code related to the development of final project | 8/8 |
+| [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
 
 ## References
 1. [USC DSCI 553 Fall 2023 - rutujabhandigani/DSCI553-Data-Mining](https://github.com/rutujabhandigani/DSCI553-Data-Mining)
