@@ -28,7 +28,7 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | [HW 3](/assignment-3) | Build Hybrid Recommendation systems integrating `Item-based Collaborative Filtering` and `Model-based` approaches using `XGBRegressor` | 7/7 |
 | [HW 4](/assignment-4) | Building `Graphs` and `Community Detection` based on `Graphframes` and `Girvan-Newman algorithm` | 7/7 |
 | [HW 5](/assignment-5) | Data Streaming Analysis - `Bloom Filter`, `Flajolet-Martin`, and `Reservoir Sampling` | 7/7 |
-| [HW 6](/assignment-6) | Clustering using `Bradley-Fayyad-Reina (BFR) algorithm` on synthetic dataset | 5/7 |
+| [HW 6](/assignment-6) | Clustering using `Bradley-Fayyad-Reina (BFR) algorithm` on synthetic dataset | 7/7 |
 | --- | --- |
 | [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
 | --- | --- |
