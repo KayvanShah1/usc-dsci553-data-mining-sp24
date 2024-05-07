@@ -116,15 +116,15 @@ class BusinessData:
         return row
 
     @staticmethod
-    def generate_mapping(bus_rdd):
+    def generate_mapping(rdd):
         # Extract unique values for state and city
-        state_to_index = bus_rdd.map(lambda row: row["state"]).distinct().zipWithIndex().collectAsMap()
-        city_to_index = bus_rdd.map(lambda row: row["city"]).distinct().zipWithIndex().collectAsMap()
+        state_to_index = rdd.map(lambda row: row["state"]).distinct().zipWithIndex().collectAsMap()
+        city_to_index = rdd.map(lambda row: row["city"]).distinct().zipWithIndex().collectAsMap()
 
         return state_to_index, city_to_index
 
-    def process(bus_rdd):
-        bus_rdd = bus_rdd.map(lambda row: BusinessData.parse_row(row)).map(
+    def process(rdd):
+        rdd = rdd.map(lambda row: BusinessData.parse_row(row)).map(
             lambda row: (
                 row["business_id"],
                 (
@@ -138,7 +138,7 @@ class BusinessData:
                 ),
             )
         )
-        return bus_rdd
+        return rdd.cache().collectAsMap()
 
 
 class UserData:
@@ -190,8 +190,8 @@ class UserData:
         # row = {k: v for k, v in row.items() if k not in UserData.keys_to_delete}
         return row
 
-    def process(user_rdd):
-        user_rdd = user_rdd.map(lambda row: UserData.parse_row(row)).map(
+    def process(rdd):
+        rdd = rdd.map(lambda row: UserData.parse_row(row)).map(
             lambda row: (
                 row["user_id"],
                 (
@@ -208,7 +208,7 @@ class UserData:
                 ),
             )
         )
-        return user_rdd
+        return rdd.cache().collectAsMap()
 
 
 class ReviewData:
@@ -243,7 +243,7 @@ class ReviewData:
                 )  # Calculate averages
             )
         )
-        return rdd
+        return rdd.cache().collectAsMap()
 
 
 class TipData:
@@ -264,7 +264,7 @@ class TipData:
                 lambda x, y: (x[0] + y[0], x[1] + y[1])
             )
         )
-        return rdd
+        return rdd.cache().collectAsMap()
 
 
 class PhotoData:
@@ -291,7 +291,7 @@ class PhotoData:
                 )
             )
         )
-        return rdd
+        return rdd.cache().collectAsMap()
 
 
 class ModelBasedConfig:
@@ -410,27 +410,22 @@ def process_data(folder_path: str, test_file_name: str):
         # User related data
         usr_rdd = data_reader.read_json_spark(os.path.join(folder_path, "user.json"))
         usr_rdd = UserData.process(usr_rdd)
-        usr_rdd = usr_rdd.cache().collectAsMap()
 
         # Business related data
         bus_rdd = data_reader.read_json_spark(os.path.join(folder_path, "business.json"))
         bus_rdd = BusinessData.process(bus_rdd)
-        bus_rdd = bus_rdd.cache().collectAsMap()
 
         # User to Business Reviews
         review_rdd = data_reader.read_json_spark(os.path.join(folder_path, "review_train.json"))
         review_rdd = ReviewData.process(review_rdd)
-        review_rdd = review_rdd.cache().collectAsMap()
 
         # User 2 Business Tip
         tip_rdd = data_reader.read_json_spark(os.path.join(folder_path, "tip.json"))
         tip_rdd = TipData.process(tip_rdd)
-        tip_rdd = tip_rdd.cache().collectAsMap()
 
         # Business Photo Data
         img_rdd = data_reader.read_json_spark(os.path.join(folder_path, "photo.json"))
         img_rdd = PhotoData.process(img_rdd)
-        img_rdd = img_rdd.cache().collectAsMap()
 
         # Business checkin data
         # cin_rdd = data_reader.read_json_spark(os.path.join(folder_path, "checkin.json"))
