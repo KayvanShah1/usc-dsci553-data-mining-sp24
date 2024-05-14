@@ -1,7 +1,5 @@
 # DSCI553 - Foundations & Applications of Data Mining - Spring 2024 - USC
-Welcome to the comprehensive repository for _DSCI 510 - Foundations of Data Management_ at USC during the __Spring 2024__ semester, taught by `Professor Wei-Min When`. This centralized hub contains all coursework materials, including assignments and project solutions, organized into folders representing distinct modules covered in the course.
-
-Within this repository, assignments and projects delve into fundamental concepts like data storage, file systems, relational vs. semi-structured data, SQL, and more. The course explores big data analytics, addressing NoSQL databases, cloud storage, distributed file systems, and MapReduce. Advanced topics like data cleaning, transformation, warehousing, and integration are also covered. It's important to use this repository responsibly, refraining from engaging in plagiarism-related activities.
+Welcome to the comprehensive repository for course _DSCI 510 - Foundations of Data Management_ taught by `Professor Wei-Min When` at USC during the __Spring 2024__ semester. This centralized hub contains all coursework materials, including assignments and project solutions, organized into folders representing distinct modules covered in the course.
 
 > [!TIP]
 > Before exploring the materials, take a moment to review the license and disclaimer for responsible utilization. The repository covers various topics, providing valuable insights and hands-on experience in Data Management.
@@ -10,15 +8,11 @@ Within this repository, assignments and projects delve into fundamental concepts
 - **Course Name:** DSCI 553 - Foundations & Applications of Data Mining
 - **Instructor:** Prof. Wei-Min Shen
 - **Semester:** Spring 2024
-- **About the Course:**
-  - Function and design of modern storage systems, including cloud; data management
-techniques; data modeling; network attached storage, clusters, and data centers;
-relational databases; the map-reduce paradigm.
 
-Feel free to explore the assignments, projects, and solutions provided as learning aids. Whether you're a beginner or an experienced practitioner, this repository aims to be your companion in mastering the intersection of foundational data management and data mining fundamentals within Data Science & Engineering. Happy learning!
+Feel free to explore the assignments, projects, and solutions provided as learning aids. Whether you're a beginner or an experienced practitioner, this repository aims to be your companion in mastering the intersection of foundational data mining fundamentals within Data Science & Engineering. Happy learning!
 
 > [!CAUTION]
-> Please note that this repository serves as a reference guide and should be utilized as a tool for learning and comprehension. It's paramount to refrain from engaging in any activities associated with plagiarism. Embrace the wealth of knowledge herein to enhance your understanding and augment your skill set in Data Engineering.
+> Please note that this repository serves as a reference guide and should be utilized as a tool for learning and comprehension. It's paramount to refrain from engaging in any activities associated with plagiarism. Embrace the wealth of knowledge herein to enhance your understanding and augment your skill set in Data Mining.
 
 ## Table of contents
 | Assignment | Topic Covered                 | Grade |
