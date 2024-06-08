@@ -26,7 +26,10 @@ Feel free to explore the assignments, projects, and solutions provided as learni
 | --- | --- |
 | [Competition](/competition) | Recommendation System on Yelp Reviews Dataset | 8/8 |
 | --- | --- |
-| [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes |
+| [Quizzes](/quizzes) | Consists of PDF documents with question bank for quizzes | |
+
+> [!NOTE]
+> Overall Grade: `A-`
 
 ## References
 1. [USC DSCI 553 Fall 2023 - rutujabhandigani/DSCI553-Data-Mining](https://github.com/rutujabhandigani/DSCI553-Data-Mining)
