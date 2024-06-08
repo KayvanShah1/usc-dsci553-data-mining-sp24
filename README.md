@@ -2,7 +2,7 @@
 Welcome to the comprehensive repository for course _DSCI 510 - Foundations of Data Management_ taught by `Professor Wei-Min When` at USC during the __Spring 2024__ semester. This centralized hub contains all coursework materials, including assignments and project solutions, organized into folders representing distinct modules covered in the course.
 
 > [!TIP]
-> Before exploring the materials, take a moment to review the license and disclaimer for responsible utilization. The repository covers various topics, providing valuable insights and hands-on experience in Data Management.
+> Before exploring the materials, take a moment to review the license and disclaimer for responsible utilization. The repository covers various topics, providing valuable insights and hands-on experience in Data Mining.
 
 ## Course Details:
 - **Course Name:** DSCI 553 - Foundations & Applications of Data Mining
