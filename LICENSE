@@ -2,22 +2,49 @@ BSD 5-Clause License with Comprehensive Disclaimer and Permission Requirement
 
 Copyright (c) 2024, Kayvan Shah
 
-Redistribution, modification, and use of this software in source or binary forms, with or without modification, are strictly prohibited without prior written permission from the copyright holder. Any unauthorized use constitutes a violation of this license.
+Redistribution, modification, and use of this software in source or binary forms, 
+with or without modification, are strictly prohibited without prior written permission 
+from the copyright holder. Any unauthorized use constitutes a violation of this license.
 
 The following conditions must be met for any use of this software:
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions, and the following disclaimers. All modifications must be clearly identified as distinct from the original work.
+1. Redistributions of source code must retain the above copyright notice, this list of 
+conditions, and the following disclaimers. All modifications must be clearly identified 
+as distinct from the original work.
 
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions, and the following disclaimers in the documentation and/or other materials provided with the distribution.
+2. Redistributions in binary form must reproduce the above copyright notice, this list 
+of conditions, and the following disclaimers in the documentation and/or other materials
+provided with the distribution.
 
-3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. Unauthorized use of the name for promotion shall constitute a breach of this license.
+3. Neither the name of the copyright holder nor the names of its contributors may be 
+used to endorse or promote products derived from this software without specific prior 
+written permission. Unauthorized use of the name for promotion shall constitute a breach 
+of this license.
 
-4. Redistribution, modification, or use of this software, whether in part or in whole, is prohibited without express prior written permission from the copyright holder. Any derived or modified versions must exhibit substantial and significant changes from the original and must not be presented or misrepresented as the original software.
+4. Redistribution, modification, or use of this software, whether in part or in whole, 
+is prohibited without express prior written permission from the copyright holder. Any 
+derived or modified versions must exhibit substantial and significant changes from the 
+original and must not be presented or misrepresented as the original software.
 
-5. Use of this software for any purpose, including but not limited to academic, commercial, or personal use, is strictly forbidden without the prior express written consent of the copyright holder. The software must not be used in any manner that violates academic integrity policies, ethical standards, or legal guidelines. The copyright holder bears no responsibility for any academic or legal infractions that result from its use, and the user assumes all responsibility for compliance with relevant laws, policies, and regulations.
+5. Use of this software for any purpose, including but not limited to academic, commercial, 
+or personal use, is strictly forbidden without the prior express written consent of the 
+copyright holder. The software must not be used in any manner that violates academic integrity 
+policies, ethical standards, or legal guidelines. The copyright holder bears no responsibility 
+for any academic or legal infractions that result from its use, and the user assumes all 
+responsibility for compliance with relevant laws, policies, and regulations.
 
 DISCLAIMER OF LIABILITY:
 
-THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT 
+NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, 
+OR NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR 
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
+OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-By using this software, you acknowledge that any unauthorized use, redistribution, or modification of this software without the express written consent of the copyright holder is prohibited. The copyright holder is not responsible for any misuse, academic misconduct, or other consequences arising from such unauthorized use.
+By using this software, you acknowledge that any unauthorized use, redistribution, or 
+modification of this software without the express written consent of the copyright holder 
+is prohibited. The copyright holder is not responsible for any misuse, academic misconduct, 
+or other consequences arising from such unauthorized use.
